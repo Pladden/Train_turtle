@@ -2,6 +2,7 @@ from random import random
 import math
 import turtle
 import json
+import os
 
 SKY_COLOR = (0, 0, 20)
 MAX_POWER_COLOR = (220, 220, 255)
@@ -125,14 +126,28 @@ def initialize_screen():
 	turtle.Screen().bgcolor(*SKY_COLOR)
 
 
+def get_json_file_names():
+	file_names = []
+	for file_name in os.listdir('.'):
+		if file_name.endswith('.json'):
+			file_names += [file_name]
+	return file_names
+
+
 def main():
-	file_name = input('Enter a file name to load from it (empty enter will generate a new one): ')
+	file_names = get_json_file_names()
+	for index, file_name in enumerate(file_names):
+		print(index + 1, file_name)
+	file_number = input('Enter a file number to load from it (empty enter will generate a new one): ')
 	initialize_screen()
-	if file_name:
+	if file_number:
+		file_name = file_names[int(file_number) - 1]
 		branches = load_lightning_branches(file_name)
 	else: 
 		branches = build_lightning_branches()
-		save_lightning_branches(branches)
+		file_name = input('Enter a file name to save it (empty enter means no saving): ')
+		if file_name:
+			save_lightning_branches(branches, file_name + '.json')
 	draw_lightning_branches_by_layers(branches)
 	
 
