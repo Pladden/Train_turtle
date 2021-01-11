@@ -1,8 +1,14 @@
 import turtle 
 import datetime
 
+
+REFRESH_TIME_MILLISECONDS = 20
+
+
 class Clock(object):
 	def __init__(self):
+		turtle.Screen().colormode(255)
+		turtle.Screen().bgpic("clock.gif")
 		self.hour_pen = turtle.Pen()
 		self.minute_pen = turtle.Pen()
 		self.second_pen = turtle.Pen()
@@ -10,16 +16,15 @@ class Clock(object):
 
 	def draw_clock(self):
 		turtle.Screen().tracer(False)
-		turtle.Screen().bgpic("clock.gif")
 		now = datetime.datetime.now()
 		hour = now.hour + now.minute / 60
 		minute = now.minute + now.second / 60
-		second = now.second
+		second = now.second + now.microsecond / 1e6
 		self.draw_hour_arrow(hour)
 		self.draw_minute_arrow(minute)
 		self.draw_second_arrow(second)
 		turtle.Screen().tracer(True)
-		turtle.Screen().ontimer(self.draw_clock, 1000)
+		turtle.Screen().ontimer(self.draw_clock, REFRESH_TIME_MILLISECONDS)
 
 	def draw_arrow(self, p, angle, pen_size, color, tail_length, length):
 		p.reset()
@@ -59,7 +64,6 @@ class Clock(object):
 
 
 def main():
-	turtle.Screen().colormode(255)
 	clock = Clock()
 	clock.draw_clock()
 	turtle.exitonclick()
